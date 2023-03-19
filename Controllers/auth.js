@@ -29,6 +29,18 @@ authController.login = (req, res = response) => {
 
 authController.register = (req, res = response) => {
 
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+
+        return res.status(400).json({
+
+            result: false,
+            errors: errors.mapped()
+
+        })
+
+    }
+
     res.json({
         message: "Register"
     })
