@@ -9,6 +9,7 @@ const UserSchema = new Schema({
     rol: { type: 'string', required: true },
     dispositivo_id: { type: 'string', required: true }
 
+    
 })
 
 export default model('User', UserSchema);
