@@ -1,39 +1,83 @@
 import { response } from 'express';
 import { validationResult } from 'express-validator';
+import bcrypt from 'bcryptjs';
 
 import User from '../models/User.js';
 
+import { generateToken } from '../helpers/jwt.js';
+
 const authController = {}
 
-authController.login = (req, res = response) => {
+authController.login = async (req, res = response) => {
 
-    const { user, password, email } = req.body
-    //Res.status(codigo)
+    const { user, password } = req.body
+    try {
 
-    res.json({
-        user: user,
-        role: rol
-    })
+        let usuario = await User.findOne({ user })
+        if (!usuario) {
+
+            return res.status(400).json({
+
+                result: false,
+                msg: 'El usuario o la contraseña no son correctos'
+
+            })
+
+        }
+
+        const validPassword = bcrypt.compare(usuario.password, password);
+        if (!validPassword) {
+            return res.status(400).json({
+
+                result: false,
+                msg: 'El usuario o la contraseña no son correctos'
+
+            })
+        }
+
+        const token = await generateToken(usuario.id, usuario.name)
+
+        res.json({
+
+            result: true,
+            uid: usuario._id,
+            name: usuario.name,
+            role: usuario.role,
+            device: usuario.device,
+            token,
+
+        })
+
+    } catch (error) {
+
+        console.log(error)
+        return res.status(500).json({
+            result: false,
+            msg: 'Hubo un error, comuniquese con el administrador'
+        })
+
+    }
 
 }
 
 authController.register = async (req, res = response) => {
 
-    const {email, user, password, pasword2} = req.body;
+    const salt = bcrypt.genSaltSync();
+    const { email, user, password, pasword2 } = req.body;
 
     try {
 
-        let usuario = await User.findOne({user})
-        let correo = await User.findOne({email})
+        let usuario = await User.findOne({ user })
+        let correo = await User.findOne({ email })
 
-        if (usuario){
+        if (usuario) {
             return res.status(400).json({
                 result: 'false',
                 msg: 'El usuario ya existe'
             })
         }
 
-        if (correo){
+        if (correo) {
             return res.status(400).json({
                 result: 'false',
                 msg: 'El email ya esta inscrito'
@@ -41,6 +85,8 @@ authController.register = async (req, res = response) => {
         }
 
         usuario = new User(req.body);
+        usuario.password = bcrypt.hashSync(password, salt);
+
         await usuario.save();
     } catch (error) {
         res.status(500).json({
@@ -62,7 +108,7 @@ authController.renew = (req, res = response) => {
     res.json({
         msg: "Renew"
     })
-}
 
+}
 
 export default authController;

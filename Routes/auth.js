@@ -19,7 +19,7 @@ router.post('/register', [
     check('password', 'El password es obligatorio').not().isEmpty(),
     check('password2', 'El password es obligatorio').not().isEmpty(),
     check('email', 'El email debe ser @unbosque.edu.co').isEmail({ domain_specific_validation: '@unbosque.edu.co' }).not().isEmpty(),
-    check('rol', 'El rol es obligatorio').not().isEmpty(),
+    check('role', 'El rol es obligatorio').not().isEmpty(),
     check('email', 'El email debe ser @unbosque.edu.co').not().isEmpty().custom(
 
         value => {
