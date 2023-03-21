@@ -3,6 +3,8 @@ import { check } from 'express-validator';
 
 import auth from '../Controllers/Auth.Controller.js'
 import ValidateFields from '../Middlewares/ValidateFields.js';
+import { ValidarToken } from '../Middlewares/ValidateToken.js';
+
 
 const router = Router();
 
@@ -33,6 +35,6 @@ router.post('/register', [
     ValidateFields
 ], auth.register)
 
-router.post('/renewtok', auth.renew)
+router.post('/renewtok', ValidarToken, auth.renew)
 
 export default router;

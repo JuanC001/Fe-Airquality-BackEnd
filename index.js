@@ -1,5 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
+
 
 import auth from './Routes/auth.js'
 import dbConnection from './Database/config.js';
@@ -17,6 +19,8 @@ app.use(express.static('public'))
 
 //JSONFY BODY
 app.use(express.json())
+
+app.use(cors())
 
 //ROUTES
 app.use('/api/auth', auth)

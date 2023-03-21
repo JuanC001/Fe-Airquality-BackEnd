@@ -103,10 +103,19 @@ authController.register = async (req, res = response) => {
     })
 }
 
-authController.renew = (req, res = response) => {
+authController.renew = async (req, res = response) => {
+
+    const usuario = {
+
+        uid: req.uid,
+        name: req.name
+
+    }
+    const token = await generateToken(usuario.uid, usuario.name)
 
     res.json({
-        msg: "Renew"
+        msg: "Renew",
+        token
     })
 
 }
