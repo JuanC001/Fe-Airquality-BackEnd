@@ -63,7 +63,7 @@ authController.login = async (req, res = response) => {
 authController.register = async (req, res = response) => {
 
     const salt = bcrypt.genSaltSync();
-    const { email, user, password, pasword2 } = req.body;
+    const { email, user, password, pasword2, device, role } = req.body;
 
     try {
 
@@ -82,6 +82,15 @@ authController.register = async (req, res = response) => {
                 result: 'false',
                 msg: 'El email ya esta inscrito'
             })
+        }
+
+        if (role === 'user' && device !== null) {
+
+            return res.status(400).json({
+                result: 'false',
+                msg: 'El deviceID debe existir'
+            })
+
         }
 
         usuario = new User(req.body);
