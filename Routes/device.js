@@ -1,18 +1,17 @@
 import { Router } from "express";
+import { check } from "express-validator";
+import device from '../Controllers/Device.controller.js'
 
 const router = Router();
 
 //Retorna todos los dispositivos (con datos)
-router.post('/', (req, res) => {
+router.post('/getAllList', device.getAllDevicesList);
+router.post('/getAll', device.getAllDevices);
+router.post('/getOneDevice',[
 
-    console.log(req.body);
+    check('id', 'El ID es obligatorio').not().isEmpty()
 
-    res.json({
-
-        result: true
-
-    })
-
-});
+], device.getOneDevice);
+router.post('/', device.reginfo);
 
 export default router;

@@ -12,7 +12,6 @@ authController.login = async (req, res = response) => {
 
     const { user, password } = req.body
     try {
-
         let usuario = await User.findOne({ user })
         if (!usuario) {
 
@@ -37,7 +36,7 @@ authController.login = async (req, res = response) => {
 
         const token = await generateToken(usuario.id, usuario.name)
 
-        res.json({
+        res.status(200).json({
 
             result: true,
             uid: usuario._id,
@@ -64,11 +63,12 @@ authController.register = async (req, res = response) => {
 
     const salt = bcrypt.genSaltSync();
     const { email, user, password, pasword2, device, role } = req.body;
-
+    console.log(req.body)
     try {
 
         let usuario = await User.findOne({ user })
         let correo = await User.findOne({ email })
+        let dispositivo = await User.findOne({ device })
 
         if (usuario) {
             return res.status(400).json({
@@ -84,7 +84,16 @@ authController.register = async (req, res = response) => {
             })
         }
 
-        if (role === 'user' && device !== null) {
+        if(dispositivo){
+
+            return res.status(400).json({
+                result: 'false',
+                msg: 'El dispositivo ya esta registrado'
+            })
+
+        }
+
+        if (role === 'user' && device === null) {
 
             return res.status(400).json({
                 result: 'false',
