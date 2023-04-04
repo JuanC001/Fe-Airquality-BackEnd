@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 
 const DeviceSchema = new Schema({
 
-    device_id: { type: 'number', required: true },
+    id: { type: 'number', required: true },
     measures: [{
 
         pressure: { type: 'number', required: true },
@@ -12,7 +12,10 @@ const DeviceSchema = new Schema({
         rh: { type: 'number', required: true },
         date: { type: 'string', required: true },
 
-    }]
+    }],
+    lastUpdated: { type: 'string', required: true},
+    lat : {type: 'number', required: true},
+    lng : {type: 'number', required: true},
 
 })
 
