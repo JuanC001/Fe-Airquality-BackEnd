@@ -24,7 +24,7 @@ authController.login = async (req, res = response) => {
 
         }
 
-        const validPassword = bcrypt.compare(usuario.password, password);
+        const validPassword = await bcrypt.compare(password, usuario.password);
         if (!validPassword) {
             return res.status(400).json({
 
@@ -84,7 +84,7 @@ authController.register = async (req, res = response) => {
             })
         }
 
-        if(dispositivo){
+        if (dispositivo) {
 
             return res.status(400).json({
                 result: 'false',
@@ -104,6 +104,8 @@ authController.register = async (req, res = response) => {
 
         usuario = new User(req.body);
         usuario.password = bcrypt.hashSync(password, salt);
+
+        console.log(usuario.password)
 
         await usuario.save();
     } catch (error) {

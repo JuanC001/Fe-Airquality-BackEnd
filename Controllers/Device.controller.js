@@ -5,7 +5,7 @@ const deviceController = {};
 
 deviceController.reginfo = async (req, res) => {
 
-    let device = await Device.findOne(req.body.id);
+    let device = await Device.findOne({id: req.body.device});
 
     const id = req.body.device
 
@@ -44,6 +44,8 @@ deviceController.reginfo = async (req, res) => {
             })
         }
     } else if (device !== null) {
+
+        console.log(req.body)
 
         try {
 
@@ -91,6 +93,7 @@ deviceController.reginfo = async (req, res) => {
 deviceController.getAllDevicesList = async (req, res) => {
 
     let devices = await Device.find().select("id lastUpdated lat lng _id")
+    console.log('Getting all devices')
     res.json(devices)
 
 
