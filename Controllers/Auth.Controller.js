@@ -15,7 +15,7 @@ authController.login = async (req, res = response) => {
         let usuario = await User.findOne({ user })
         if (!usuario) {
 
-            return res.status(400).json({
+            return res.status(401).json({
 
                 result: false,
                 msg: 'El usuario o la contraseña no son correctos'
@@ -26,7 +26,7 @@ authController.login = async (req, res = response) => {
 
         const validPassword = await bcrypt.compare(password, usuario.password);
         if (!validPassword) {
-            return res.status(400).json({
+            return res.status(401).json({
 
                 result: false,
                 msg: 'El usuario o la contraseña no son correctos'
