@@ -4,7 +4,7 @@ import cors from 'cors';
 
 
 import auth from './Routes/auth.js'
-import admin from './Routes/investigator.js'
+import admin from './Routes/admin.js'
 import user from './Routes/user.js'
 import device from './Routes/device.js'
 

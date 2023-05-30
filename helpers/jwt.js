@@ -1,13 +1,13 @@
 import pkg from 'jsonwebtoken';
-const {sign} = pkg;
+const { sign } = pkg;
 
 
 
-export const generateToken = (uid, name) => {
+export const generateToken = (uid, name, role) => {
 
     return new Promise((resolve, reject) => {
 
-        const payload = { uid, name };
+        const payload = { uid, name, role };
 
         sign(payload, process.env.SECRET_JWT_SEED, {
 

@@ -119,4 +119,10 @@ deviceController.getOneDevice = async (req, res) => {
 
 }
 
+deviceController.giveIdDevice = async (req, res) => {
+
+    //Metodo para otorgar un id al dispositivo
+
+}
+
 export default deviceController;

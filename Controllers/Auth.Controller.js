@@ -34,7 +34,7 @@ authController.login = async (req, res = response) => {
             })
         }
 
-        const token = await generateToken(usuario.id, usuario.name)
+        const token = await generateToken(usuario.id, usuario.name, usuario.role)
 
         res.status(200).json({
 
@@ -72,14 +72,14 @@ authController.register = async (req, res = response) => {
 
         if (usuario) {
             return res.status(400).json({
-                result: 'false',
+                result: false,
                 msg: 'El usuario ya existe'
             })
         }
 
         if (correo) {
             return res.status(400).json({
-                result: 'false',
+                result: false,
                 msg: 'El email ya esta inscrito'
             })
         }
@@ -96,7 +96,7 @@ authController.register = async (req, res = response) => {
         if (role === 'user' && device === null) {
 
             return res.status(400).json({
-                result: 'false',
+                result: false,
                 msg: 'El deviceID debe existir'
             })
 
