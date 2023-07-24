@@ -8,6 +8,14 @@ import { generateToken } from '../helpers/jwt.js';
 
 const authController = {}
 
+const USER_TYPES = {
+
+    INV: 'Investigador',
+    ADM: 'Admin',
+    USR: 'User'
+
+}
+
 authController.login = async (req, res = response) => {
 
     const { user, password } = req.body
@@ -93,7 +101,7 @@ authController.register = async (req, res = response) => {
 
         }
 
-        if (role === 'user' && device === null) {
+        if (role === USER_TYPES.USR && device === null) {
 
             return res.status(400).json({
                 result: false,
