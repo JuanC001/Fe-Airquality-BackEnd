@@ -16,6 +16,7 @@ const DeviceSchema = new Schema({
     lastUpdated: { type: 'string', required: true},
     lat : {type: 'number', required: true},
     lng : {type: 'number', required: true},
+    owner: {type: 'string', required: false},
 
 })
 

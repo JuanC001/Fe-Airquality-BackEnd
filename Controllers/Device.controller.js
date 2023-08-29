@@ -5,7 +5,12 @@ const deviceController = {};
 
 deviceController.reginfo = async (req, res) => {
 
-    let device = await Device.findOne({id: req.body.device});
+    console.log('################################################################')
+    console.log('NUEVO REGISTRO')
+    let device = await Device.findOne({ id: req.body.device });
+    const date = new Date();
+    const colDate = date.toLocaleString('es-CO', { timeZone: 'America/Bogota' });
+    console.log(`Fecha: ${colDate}`)
 
     const id = req.body.device
 
@@ -19,7 +24,7 @@ deviceController.reginfo = async (req, res) => {
                 pm10: req.body.pm10,
                 temp: req.body.temp,
                 rh: req.body.rh,
-                date: new Date()
+                date: colDate
 
             }]
             const device = new Device({
@@ -31,16 +36,17 @@ deviceController.reginfo = async (req, res) => {
             device.id = id;
             device.lat = 0
             device.lng = 0
-            device.lastUpdated = new Date()
+            device.lastUpdated = colDate
             await device.save();
-            res.json({
+            console.log('Dispositivo registrado')
+            return res.status(200).json({
                 result: true,
             })
         } catch (error) {
             console.log('ERR');
             console.log(error);
-            res.json({
-                result: true,
+            return res.status(500).json({
+                result: false,
             })
         }
     } else if (device !== null) {
@@ -56,7 +62,7 @@ deviceController.reginfo = async (req, res) => {
                 pm10: req.body.pm10,
                 temp: req.body.temp,
                 rh: req.body.rh,
-                date: new Date()
+                date: colDate
 
             }
 
@@ -70,23 +76,25 @@ deviceController.reginfo = async (req, res) => {
 
             oldMeasures.push(newMeasures);
             device.measures = oldMeasures;
-            device.lastUpdated = new Date();
+            device.lastUpdated = colDate;
             device.lat = 0
             device.lng = 0
             await device.save();
-            res.json({
+            return res.status(200).json({
                 result: true,
             })
         } catch (error) {
 
             console.log(error)
-            res.json({
+            return res.status(500).json({
                 result: false,
             })
 
         }
 
     }
+
+    console.log('################################################################')
 
 }
 
