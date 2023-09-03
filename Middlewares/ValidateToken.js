@@ -6,7 +6,7 @@ export const ValidarToken = (req, res = response, next) => {
 
     const token = req.header('x-token');
 
-    if(!token){
+    if (!token) {
 
         return res.status(401).json({
             result: false,
@@ -27,7 +27,7 @@ export const ValidarToken = (req, res = response, next) => {
         req.name = payload.name;
 
         console.log(payload);
-        
+
     } catch (error) {
         res.status(401).json({
 

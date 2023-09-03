@@ -123,7 +123,7 @@ adminController.autocomplete = async (req = request, res = response) => {
         }
     }).then(res => res.json())
 
-    return res.status().json(result)
+    return res.status(200).json(result)
 }
 
 /**
@@ -133,7 +133,7 @@ adminController.autocomplete = async (req = request, res = response) => {
  */
 
 adminController.getDeviceList = async (req = request, res = response) => {
-    const devices = await Device.find().select("id")
+    const devices = await Device.find().select("id owner")
     res.json(devices)
 }
 
@@ -148,6 +148,7 @@ adminController.deleteDevice = async (req = request, res = response) => {
  */
 
 adminController.getAllUsers = async (req = request, res = response) => {
+
 
     const users = await User.find().select("id name email role device")
     res.json(users)
@@ -167,60 +168,66 @@ adminController.getOneUser = async (req = request, res = response) => {
 
 adminController.createUser = async (req = request, res = response) => {
 
-    const { name, email, password, role, device } = req.body
+    const { name, email, password, role, device, address } = req.body
+    console.log(req.body)
     let result = false
     let msg = ''
-    const user = email
     const salt = bcrypt.genSaltSync()
-
     try {
 
-        const emails = await User.findOne({ email: email })
-        const devices = await User.findOne({ device: device })
-
-        if (emails !== null) msg = 'El usuario ya existe'
-        if (devices !== null) msg += 'El dispositivo ya tiene dueño'
-
-        if (msg === '') {
-            const userAdd = new User({ name, user, email, password, role, device })
-            userAdd.password = bcrypt.hashSync(password, salt)
+        if (!role === USER_TYPES.USR) {
+            if (address === undefined) return res.json({ result: false, msg: 'El usuario debe tener dirección' })
+            if (device === undefined) return res.json({ result: false, msg: 'El usuario debe tener dispositivo' })
+            const userAdd = new User({ name, email, password: bcrypt.hashSync(password, salt), role, device, address })
             await userAdd.save()
-
             result = true
-            console.log('[ADMIN] Se ha creado un usuario')
-            msg = 'El usuario se ha creado correctamente'
+            msg = 'Usuario creado correctamente'
 
-            return res.status(201).json({
-                msg,
-                result
-            })
-        } else {
-            result = false
-            return res.status(400).json({
+            return res.json({
                 result,
                 msg
             })
+        } else {
+            const userAdd = new User({ name, email, password: bcrypt.hashSync(password, salt), role, device: email })
+            await userAdd.save()
+            result = true
+            msg = 'Usuario creado correctamente'
 
+            return res.json({
+                result,
+                msg
+            })
         }
+
+
 
     } catch (error) {
 
         console.log('[ADMIN] Error creando un usuario: ' + error)
+        msg = 'Hubo un error creando el usuario'
         result = false
+        return res.json({
+            result,
+            msg
+        })
 
     }
 
 }
 
-/**
- * 
- * TODO: Actualizar un usuario
- * 
- */
-
 adminController.updateUser = async (req = request, res = response) => {
 
+    const { id, name, email, password, role, device } = req.body
 
+    try {
+
+        User.updateOne({ id: id }, { name: name, email: email, password: password, role: role, device: device })
+
+    } catch (error) {
+
+        console.log('[ADMIN] Error actualizando un usuario: ' + error)
+
+    }
 
 }
 
@@ -247,6 +254,20 @@ adminController.deleteUser = async (req = request, res = response) => {
     res.json({
         result
     })
+
+}
+
+const createUser = () => {
+
+
+
+}
+
+const createAdmin = () => {
+
+}
+
+const createInvestigator = () => {
 
 }
 

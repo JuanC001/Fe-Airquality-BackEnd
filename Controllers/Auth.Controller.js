@@ -1,4 +1,4 @@
-import { response } from 'express';
+import { request, response } from 'express';
 import { validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 
@@ -8,19 +8,11 @@ import { generateToken } from '../helpers/jwt.js';
 
 const authController = {}
 
-const USER_TYPES = {
+authController.login = async (req = request, res = response) => {
 
-    INV: 'Investigador',
-    ADM: 'Admin',
-    USR: 'User'
-
-}
-
-authController.login = async (req, res = response) => {
-
-    const { user, password } = req.body
+    const { user: email, password } = req.body
     try {
-        let usuario = await User.findOne({ user })
+        let usuario = await User.findOne({ email })
         if (!usuario) {
 
             return res.status(401).json({
@@ -79,7 +71,9 @@ authController.renew = async (req, res = response) => {
 
     return res.status(201).json({
         msg: "Renew",
-        token
+        token,
+        uid: usuario.uid,
+        name: usuario.name
     })
 
 }

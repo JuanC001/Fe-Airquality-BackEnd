@@ -1,8 +1,6 @@
 import pkg from 'jsonwebtoken';
 const { sign } = pkg;
 
-
-
 export const generateToken = (uid, name, role) => {
 
     return new Promise((resolve, reject) => {
