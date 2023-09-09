@@ -2,6 +2,7 @@ import { response, request } from 'express';
 import User from '../models/User.js';
 import Device from '../models/Device.js';
 import bcrypt from 'bcryptjs';
+import { sendEmail } from '../helpers/sendEmail.js';
 
 const USER_TYPES = {
 
@@ -139,6 +140,29 @@ adminController.getDeviceList = async (req = request, res = response) => {
 
 adminController.deleteDevice = async (req = request, res = response) => {
 
+    const { id } = req.body
+    let result = false
+
+    try {
+
+        console.log(id)
+
+        const device = await Device.findByIdAndDelete(id)
+
+        console.log('[ADMIN] Se ha eliminado el dispositivo: ' + device)
+
+    } catch (error) {
+
+        console.log('[ADMIN] Error eliminando un dispositivo: ' + error)
+        result = false
+
+    }
+
+    res.json({
+        result
+    })
+
+
 }
 
 /**
@@ -151,7 +175,7 @@ adminController.getAllUsers = async (req = request, res = response) => {
 
 
     const users = await User.find().select("id name email role device")
-    res.json(users)
+    res.status(200).json(users)
     console.log('[ADMIN] Se ha enviado información de todos los usuarios')
 
 }
@@ -161,7 +185,7 @@ adminController.getOneUser = async (req = request, res = response) => {
     const { id } = req.body
     const user = await User.find({ id: id })
 
-    res.json(user)
+    res.status(200).json(user)
     console.log('[ADMIN] Se ha enviado información de un usuario')
 
 }
@@ -169,31 +193,45 @@ adminController.getOneUser = async (req = request, res = response) => {
 adminController.createUser = async (req = request, res = response) => {
 
     const { name, email, password, role, device, address } = req.body
-    console.log(req.body)
     let result = false
     let msg = ''
+
     const salt = bcrypt.genSaltSync()
     try {
 
         if (!role === USER_TYPES.USR) {
             if (address === undefined) return res.json({ result: false, msg: 'El usuario debe tener dirección' })
             if (device === undefined) return res.json({ result: false, msg: 'El usuario debe tener dispositivo' })
-            const userAdd = new User({ name, email, password: bcrypt.hashSync(password, salt), role, device, address })
+            const userAdd = new User({ name, email: email.toString().toLowerCase(), password: bcrypt.hashSync(password, salt), role, device, address })
+            sendEmail(email, 'Bienvenido a AirQ', `<h1>Bienvenido a AirQ</h1><p>Gracias por registrarte en AirQ, tu usuario es: ${email} y tu contraseña es: ${password}</p>`)
             await userAdd.save()
             result = true
             msg = 'Usuario creado correctamente'
-
-            return res.json({
+            return res.status(200).json({
                 result,
                 msg
             })
         } else {
-            const userAdd = new User({ name, email, password: bcrypt.hashSync(password, salt), role, device: email })
+            const userAdd = new User({ name, email: email.toString().toLowerCase(), password: bcrypt.hashSync(password, salt), role, device: email })
+
+            sendEmail(email, 'Bienvenido a AirQuality',
+                `<h1>Bienvenido a AirQuality App ☁️</h1>
+
+                <h3>¡Tu registro fue Exitoso!</h3>
+
+                <hr/>
+                <p>Ahora, a continuación te entregamos tu usuario y contraseña</p>
+                <hr/>
+                <p>⏩ Usuario es: ${email}</p>
+                <p>⏩ Contraseña es: ${password}</p>
+                <hr/>
+                <p><b>Se recomienda cambiar la contraseña al entrar</b></p>
+            `)
             await userAdd.save()
             result = true
             msg = 'Usuario creado correctamente'
 
-            return res.json({
+            return res.status(200).json({
                 result,
                 msg
             })
@@ -206,7 +244,7 @@ adminController.createUser = async (req = request, res = response) => {
         console.log('[ADMIN] Error creando un usuario: ' + error)
         msg = 'Hubo un error creando el usuario'
         result = false
-        return res.json({
+        return res.status(401).json({
             result,
             msg
         })
@@ -238,8 +276,6 @@ adminController.deleteUser = async (req = request, res = response) => {
 
     try {
 
-        console.log(id)
-
         const { name } = await User.findByIdAndDelete(id)
 
         console.log('[ADMIN] Se ha eliminado el usuario: ' + name)
@@ -254,20 +290,6 @@ adminController.deleteUser = async (req = request, res = response) => {
     res.json({
         result
     })
-
-}
-
-const createUser = () => {
-
-
-
-}
-
-const createAdmin = () => {
-
-}
-
-const createInvestigator = () => {
 
 }
 
