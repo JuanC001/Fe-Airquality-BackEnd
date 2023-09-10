@@ -119,11 +119,11 @@ deviceController.getOneDevice = async (req, res) => {
 
     try {
         let device = await Device.findById(req.body.id)
-        res.json(device)
+        if (device === null) return res.status(400).json('No se ha encontrado el dispositivo')
+        res.status(200).json(device)
     } catch (error) {
-        res.json('Whoops!')
+        res.status(400).json('Whoops!')
     }
-
 
 }
 
