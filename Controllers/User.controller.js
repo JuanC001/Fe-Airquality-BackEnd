@@ -51,5 +51,9 @@ userController.changeDevice = async (req, res = response) => {
 
 }
 
+userController.getDevice = async (req, res = response) => {
+
+}
+
 export default userController
 

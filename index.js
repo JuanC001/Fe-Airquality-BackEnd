@@ -15,6 +15,13 @@ dotenv.config()
 const app = express();
 const port = process.env.PORT || 3000;
 
+const corsOptions = {
+
+    origin: process.env.FRONTEND_URL || '*',
+    optionsSuccessStatus: 200
+
+}
+
 //Connect to MongoDB
 dbConnection();
 
@@ -24,7 +31,7 @@ app.use(express.static('public'))
 //JSONFY BODY
 app.use(express.json())
 
-app.use(cors())
+app.use(cors(corsOptions))
 
 //ROUTES
 app.use('/api/auth', auth)
