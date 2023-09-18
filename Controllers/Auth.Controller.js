@@ -43,6 +43,7 @@ authController.login = async (req = request, res = response) => {
             name: usuario.name,
             role: usuario.role,
             device: usuario.device,
+            firstLogin: usuario.firstLogin,
             token,
 
         })

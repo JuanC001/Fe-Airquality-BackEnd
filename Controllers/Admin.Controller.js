@@ -29,7 +29,6 @@ adminController.verifyUser = async (req = request, res = response) => {
     try {
 
         const user = await User.findOne({ email: email })
-        console.log(user)
 
         if (user !== null) {
 
@@ -162,7 +161,6 @@ adminController.deleteDevice = async (req = request, res = response) => {
         result
     })
 
-
 }
 
 /**
@@ -203,16 +201,20 @@ adminController.createUser = async (req = request, res = response) => {
             if (address === undefined) return res.json({ result: false, msg: 'El usuario debe tener dirección' })
             if (device === undefined) return res.json({ result: false, msg: 'El usuario debe tener dispositivo' })
             const userAdd = new User({ name, email: email.toString().toLowerCase(), password: bcrypt.hashSync(password, salt), role, device, address })
-            sendEmail(email, 'Bienvenido a AirQ', `<h1>Bienvenido a AirQ</h1><p>Gracias por registrarte en AirQ, tu usuario es: ${email} y tu contraseña es: ${password}</p>`)
-            await userAdd.save()
+
             result = true
             msg = 'Usuario creado correctamente'
+
+            await userAdd.save()
+
+            sendEmail(email, 'Bienvenido a AirQ', `<h1>Bienvenido a AirQ</h1><p>Gracias por registrarte en AirQ, tu usuario es: ${email} y tu contraseña es: ${password}</p>`)
             return res.status(200).json({
                 result,
                 msg
             })
         } else {
-            const userAdd = new User({ name, email: email.toString().toLowerCase(), password: bcrypt.hashSync(password, salt), role, device: email })
+
+            const userAdd = new User({ name, email: email.toString().toLowerCase(), password: bcrypt.hashSync(password, salt), role, device })
 
             sendEmail(email, 'Bienvenido a AirQuality',
                 `<h1>Bienvenido a AirQuality App ☁️</h1>
@@ -227,7 +229,16 @@ adminController.createUser = async (req = request, res = response) => {
                 <hr/>
                 <p><b>Se recomienda cambiar la contraseña al entrar</b></p>
             `)
+
+            const { lat, lng } = req.body
+
+            await Device.findByIdAndUpdate(device, {
+                owner: email.toString().toLowerCase(),
+                lat: lat,
+                lng: lng
+            })
             await userAdd.save()
+
             result = true
             msg = 'Usuario creado correctamente'
 
@@ -276,7 +287,9 @@ adminController.deleteUser = async (req = request, res = response) => {
 
     try {
 
-        const { name } = await User.findByIdAndDelete(id)
+        const { name, device } = await User.findByIdAndDelete(id)
+        console.log(name)
+        await Device.findByIdAndUpdate(device, { owner: '' })
 
         console.log('[ADMIN] Se ha eliminado el usuario: ' + name)
 
