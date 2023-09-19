@@ -10,5 +10,4 @@ router.post('/changePassword', ValidarToken, userController.changePassword);
 router.post('/changedevice', ValidarToken, userController.changeDevice);
 router.post('/registerdevice', ValidarToken, userController.changeDevice);
 
-
 export default router;

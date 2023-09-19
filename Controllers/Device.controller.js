@@ -93,14 +93,11 @@ deviceController.reginfo = async (req, res) => {
         }
 
     }
-
-    console.log('################################################################')
-
 }
 
 deviceController.getAllDevicesList = async (req, res) => {
 
-    let devices = await Device.find().select("id lastUpdated lat lng _id")
+    let devices = await Device.find().select("id lastUpdated lat lng _id owner")
     console.log('Getting all devices')
     res.json(devices)
 

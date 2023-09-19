@@ -8,20 +8,36 @@ const userController = {};
 
 userController.changePassword = async (req, res = response) => {
 
-    const { password, uid } = req.body
+    const { lastPassword, newPassword, uid } = req.body
     let msg = {
 
         result: true,
         msg: '¡Contraseña cambiada!'
 
     }
-    const salt = bcrypt.genSaltSync()
 
     try {
 
         let usuario = await User.findById(uid)
-        usuario.password = bcrypt.hashSync(password, salt)
+
+        const validPassword = await bcrypt.compare(lastPassword, usuario.password);
+        if (!validPassword) {
+            return res.status(401).json({
+
+                result: false,
+                msg: 'La contraseña no es correcta'
+
+            })
+        }
+
+        const salt = bcrypt.genSaltSync()
+        usuario.password = bcrypt.hashSync(newPassword, salt)
+        usuario.firstLogin = false
         await usuario.save()
+
+        return res.status(200).json(msg)
+
+
 
     } catch (error) {
 
