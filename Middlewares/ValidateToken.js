@@ -26,8 +26,6 @@ export const ValidarToken = (req, res = response, next) => {
         req.uid = payload.uid;
         req.name = payload.name;
 
-        console.log(payload);
-
     } catch (error) {
         res.status(401).json({
 

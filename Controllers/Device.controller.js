@@ -68,7 +68,7 @@ deviceController.reginfo = async (req, res) => {
 
             const oldMeasures = device.measures;
 
-            if (oldMeasures.length > 19) {
+            if (oldMeasures.length > 479) {
 
                 oldMeasures.shift();
 

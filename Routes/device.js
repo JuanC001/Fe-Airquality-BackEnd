@@ -2,12 +2,14 @@ import { Router } from "express";
 import { check } from "express-validator";
 import device from '../Controllers/Device.controller.js'
 
+import { ValidarToken } from '../Middlewares/ValidateToken.js';
+
 const router = Router();
 
 //Retorna todos los dispositivos (con datos)
-router.post('/getAllList', device.getAllDevicesList);
-router.post('/getAll', device.getAllDevices);
-router.post('/getOneDevice',[
+router.post('/getAllList', ValidarToken, device.getAllDevicesList);
+router.post('/getAll', ValidarToken, device.getAllDevices);
+router.post('/getOneDevice', ValidarToken, [
 
     check('id', 'El ID es obligatorio').not().isEmpty()
 
