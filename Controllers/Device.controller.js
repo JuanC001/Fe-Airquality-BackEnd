@@ -119,7 +119,10 @@ deviceController.getOneDevice = async (req, res) => {
         if (device === null) return res.status(400).json('No se ha encontrado el dispositivo')
         res.status(200).json(device)
     } catch (error) {
-        res.status(400).json('Whoops!')
+        res.status(400).json({
+            error: error,
+            msg: "hubo un error al obtener el dispositivo"
+        })
     }
 
 }
