@@ -120,9 +120,11 @@ deviceController.getOneDevice = async (req, res) => {
         res.status(200).json(device)
     } catch (error) {
         res.json({
-            error: error,
             msg: "hubo un error al obtener el dispositivo"
         })
+
+        console.log("[ADMIN] "+error)
+
     }
 
 }
