@@ -10,6 +10,8 @@ const authController = {}
 
 authController.login = async (req = request, res = response) => {
 
+    console.log("[AUTH] Iniciando Sesion (Email)")
+
     const { user: email, password } = req.body
     try {
         let usuario = await User.findOne({ email })
@@ -61,6 +63,8 @@ authController.login = async (req = request, res = response) => {
 }
 
 authController.renew = async (req, res = response) => {
+
+    console.log("[AUTH] Renovando Token")
 
     const usuario = {
 

@@ -22,6 +22,8 @@ const adminController = {};
 
 adminController.verifyUser = async (req = request, res = response) => {
 
+    console.log("[ADMIN] Verificando Usuario (Email)")
+
     let verify = true
     let msg = ''
     const { email } = req.body
@@ -54,6 +56,8 @@ adminController.verifyUser = async (req = request, res = response) => {
 }
 
 adminController.verifyOwner = async (req = request, res = response) => {
+
+    console.log("[ADMIN] Verificando Dueño (Device)")
 
     let verify = false
     let owner = ""
@@ -96,7 +100,7 @@ adminController.verifyOwner = async (req = request, res = response) => {
 adminController.getLongLat = async (req = request, res = response) => {
 
     const { placeId } = req.body
-
+    console.log("[ADMIN] Obteniendo coordenadas de una dirección")
 
     const url = `https://maps.googleapis.com/maps/api/place/details/json?key=${process.env.GOOGLE_API_KEY}&place_id=${placeId}`
 
@@ -111,6 +115,8 @@ adminController.getLongLat = async (req = request, res = response) => {
 }
 
 adminController.autocomplete = async (req = request, res = response) => {
+
+    console.log("[ADMIN] Autocompletando direcciones")
 
     const { address } = req.body
 
@@ -133,11 +139,15 @@ adminController.autocomplete = async (req = request, res = response) => {
  */
 
 adminController.getDeviceList = async (req = request, res = response) => {
+    console.log("[ADMIN] Obteniendo lista de dispositivos")
+
     const devices = await Device.find().select("id owner")
     res.json(devices)
 }
 
 adminController.deleteDevice = async (req = request, res = response) => {
+
+    console.log("[ADMIN] Eliminando dispositivo")
 
     const { id } = req.body
     let result = false
@@ -171,7 +181,7 @@ adminController.deleteDevice = async (req = request, res = response) => {
 
 adminController.getAllUsers = async (req = request, res = response) => {
 
-
+    console.log("[ADMIN] Obteniendo información de todos los usuarios")
     const users = await User.find().select("id name email role device")
     res.status(200).json(users)
     console.log('[ADMIN] Se ha enviado información de todos los usuarios')
@@ -179,6 +189,8 @@ adminController.getAllUsers = async (req = request, res = response) => {
 }
 
 adminController.getOneUser = async (req = request, res = response) => {
+
+    console.log("[ADMIN] Obteniendo información de un usuario")
 
     const { id } = req.body
     const user = await User.find({ id: id })
@@ -189,6 +201,8 @@ adminController.getOneUser = async (req = request, res = response) => {
 }
 
 adminController.createUser = async (req = request, res = response) => {
+
+    console.log("[ADMIN] Creando un usuario")
 
     const { name, email, password, role, device, address } = req.body
     let result = false
@@ -266,6 +280,8 @@ adminController.createUser = async (req = request, res = response) => {
 
 adminController.updateUser = async (req = request, res = response) => {
 
+    console.log("[ADMIN] Actualizando un usuario")
+
     const { id, name, email, password, role, device } = req.body
 
     try {
@@ -281,6 +297,8 @@ adminController.updateUser = async (req = request, res = response) => {
 }
 
 adminController.deleteUser = async (req = request, res = response) => {
+
+    console.log("[ADMIN] Eliminando usuario")
 
     const { id } = req.body
     let result = false
