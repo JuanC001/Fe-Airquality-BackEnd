@@ -228,7 +228,7 @@ adminController.createUser = async (req = request, res = response) => {
             })
         } else {
 
-            const userAdd = new User({ name, email: email.toString().toLowerCase(), password: bcrypt.hashSync(password, salt), role, device })
+            const userAdd = new User({ name, email: email.toString().toLowerCase(), password: bcrypt.hashSync(password, salt), role, device: email })
 
             sendEmail(email, 'Bienvenido a AirQuality',
                 `<h1>Bienvenido a AirQuality App ☁️</h1>
