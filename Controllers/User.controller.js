@@ -8,6 +8,8 @@ const userController = {};
 
 userController.changePassword = async (req, res = response) => {
 
+    console.log("[USER] Cambiando contraseña")
+
     const { lastPassword, newPassword, uid } = req.body
     let msg = {
 
@@ -52,6 +54,8 @@ userController.changePassword = async (req, res = response) => {
 }
 
 userController.changeDevice = async (req, res = response) => {
+
+    console.log("[USER] Cambiando dispositivo")
 
     const { newDevice, uid } = req.body
     let msg = {

@@ -5,8 +5,7 @@ const deviceController = {};
 
 deviceController.reginfo = async (req, res) => {
 
-    console.log('################################################################')
-    console.log('NUEVO REGISTRO')
+    console.log("[DEVICE] Registrando informacion")
     let device = await Device.findOne({ id: req.body.device });
     const date = new Date();
     const colDate = date.toLocaleString('es-CO', { timeZone: 'America/Bogota' });
@@ -97,6 +96,8 @@ deviceController.reginfo = async (req, res) => {
 
 deviceController.getAllDevicesList = async (req, res) => {
 
+    console.log("[DEVICE] Obteniendo todos los dispositivos (Lista)")
+
     let devices = await Device.find().select("id lastUpdated lat lng _id owner")
     console.log('Getting all devices')
     res.json(devices)
@@ -106,6 +107,8 @@ deviceController.getAllDevicesList = async (req, res) => {
 
 deviceController.getAllDevices = async (req, res) => {
 
+    console.log("[DEVICE] Obteniendo todos los dispositivos (CON INFORMACION)")
+
     let devices = await Device.find()
     res.json(devices)
 
@@ -114,12 +117,19 @@ deviceController.getAllDevices = async (req, res) => {
 
 deviceController.getOneDevice = async (req, res) => {
 
+    console.log("[DEVICE] Obteniendo un dispositivo")
+
     try {
         let device = await Device.findById(req.body.id)
         if (device === null) return res.status(400).json('No se ha encontrado el dispositivo')
         res.status(200).json(device)
     } catch (error) {
-        res.status(400).json('Whoops!')
+        res.json({
+            msg: "hubo un error al obtener el dispositivo"
+        })
+
+        console.log("[ADMIN] "+error)
+
     }
 
 }
