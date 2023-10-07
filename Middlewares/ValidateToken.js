@@ -1,6 +1,5 @@
-import pkg from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { response } from 'express';
-const { verify } = pkg;
 
 export const ValidarToken = (req, res = response, next) => {
 
@@ -17,7 +16,7 @@ export const ValidarToken = (req, res = response, next) => {
 
     try {
 
-        const payload = verify(
+        const payload = jwt.verify(
 
             token, process.env.SECRET_JWT_SEED
 
@@ -33,6 +32,7 @@ export const ValidarToken = (req, res = response, next) => {
             msg: 'token no valido'
 
         })
+        return
     }
 
     next();

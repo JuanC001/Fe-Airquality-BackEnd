@@ -64,22 +64,37 @@ authController.login = async (req = request, res = response) => {
 
 authController.renew = async (req, res = response) => {
 
-    console.log("[AUTH] Renovando Token")
+    try {
 
-    const usuario = {
+        console.log("[AUTH] Renovando Token")
 
-        uid: req.uid,
-        name: req.name
+        const { uid } = req.body
+
+        const usuario = await User.findById(uid)
+
+        const { firstLogin, name, role, device } = usuario
+
+        const token = await generateToken(uid, name, role)
+
+        return res.status(200).json({
+            msg: "Renew",
+            token,
+            uid,
+            name,
+            role,
+            device,
+            firstLogin,
+            result: true
+        })
+
+    } catch (error) {
+
+        return res.status(500).json({
+            result: false,
+            msg: 'Hubo un error, comuniquese con el administrador'
+        })
 
     }
-    const token = await generateToken(usuario.uid, usuario.name)
-
-    return res.status(201).json({
-        msg: "Renew",
-        token,
-        uid: usuario.uid,
-        name: usuario.name
-    })
 
 }
 
