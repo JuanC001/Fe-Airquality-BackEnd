@@ -9,7 +9,7 @@ export const generateToken = (uid, name, role) => {
 
         sign(payload, process.env.SECRET_JWT_SEED, {
 
-            expiresIn: '2h'
+            expiresIn: '1h'
 
         }, (err, token) => {
 

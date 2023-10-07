@@ -22,6 +22,6 @@ router.post('/login', [
 
 ], auth.login)
 
-router.post('/renewtok', ValidarToken, auth.renew)
+router.post('/renew', ValidarToken, auth.renew)
 
 export default router;
