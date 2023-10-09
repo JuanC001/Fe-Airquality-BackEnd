@@ -211,7 +211,7 @@ adminController.createUser = async (req = request, res = response) => {
     const salt = bcrypt.genSaltSync()
     try {
 
-        if (!role === USER_TYPES.USR) {
+        if (role === USER_TYPES.USR) {
             if (address === undefined) return res.json({ result: false, msg: 'El usuario debe tener dirección' })
             if (device === undefined) return res.json({ result: false, msg: 'El usuario debe tener dispositivo' })
             const userAdd = new User({ name, email: email.toString().toLowerCase(), password: bcrypt.hashSync(password, salt), role, device, address })
@@ -219,7 +219,15 @@ adminController.createUser = async (req = request, res = response) => {
             result = true
             msg = 'Usuario creado correctamente'
 
+
             await userAdd.save()
+            const { lat, lng } = req.body
+
+            await Device.findByIdAndUpdate(device, {
+                owner: email.toString().toLowerCase(),
+                lat: lat,
+                lng: lng
+            })
 
             sendEmail(email, 'Bienvenido a AirQ', `<h1>Bienvenido a AirQ</h1><p>Gracias por registrarte en AirQ, tu usuario es: ${email} y tu contraseña es: ${password}</p>`)
             return res.status(200).json({
@@ -244,13 +252,6 @@ adminController.createUser = async (req = request, res = response) => {
                 <p><b>Se recomienda cambiar la contraseña al entrar</b></p>
             `)
 
-            const { lat, lng } = req.body
-
-            await Device.findByIdAndUpdate(device, {
-                owner: email.toString().toLowerCase(),
-                lat: lat,
-                lng: lng
-            })
             await userAdd.save()
 
             result = true
