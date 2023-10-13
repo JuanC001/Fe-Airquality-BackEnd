@@ -229,7 +229,19 @@ adminController.createUser = async (req = request, res = response) => {
                 lng: lng
             })
 
-            sendEmail(email, 'Bienvenido a AirQ', `<h1>Bienvenido a AirQ</h1><p>Gracias por registrarte en AirQ, tu usuario es: ${email} y tu contraseña es: ${password}</p>`)
+            sendEmail(email, 'Bienvenido a AirQuality',
+                `<h1>Bienvenido a AirQuality App ☁️</h1>
+
+            <h3>¡Tu registro fue Exitoso!</h3>
+
+            <hr/>
+            <p>Ahora, a continuación te entregamos tu usuario y contraseña</p>
+            <hr/>
+            <p>⏩ Usuario es: ${email}</p>
+            <p>⏩ Contraseña es: ${password}</p>
+            <hr/>
+            <p><b>Se recomienda cambiar la contraseña al entrar</b></p>
+        `)
             return res.status(200).json({
                 result,
                 msg
@@ -308,7 +320,7 @@ adminController.deleteUser = async (req = request, res = response) => {
 
         const { name, device } = await User.findByIdAndDelete(id)
         console.log(name)
-        await Device.findByIdAndUpdate(device, { owner: '' })
+        await Device.findByIdAndUpdate(device, { owner: '', lat: 0, lng: 0 })
 
         console.log('[ADMIN] Se ha eliminado el usuario: ' + name)
 
