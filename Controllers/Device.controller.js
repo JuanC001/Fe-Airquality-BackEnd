@@ -76,8 +76,6 @@ deviceController.reginfo = async (req, res) => {
             oldMeasures.push(newMeasures);
             device.measures = oldMeasures;
             device.lastUpdated = colDate;
-            device.lat = 0
-            device.lng = 0
             await device.save();
             return res.status(200).json({
                 result: true,
