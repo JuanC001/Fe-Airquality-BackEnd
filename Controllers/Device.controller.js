@@ -8,7 +8,7 @@ deviceController.reginfo = async (req, res) => {
     console.log("[DEVICE] Registrando informacion")
     let device = await Device.findOne({ id: req.body.device });
     const date = new Date();
-    const colDate = date.toLocaleString('es-CO', { timeZone: 'America/Bogota' });
+    const colDate = date.toLocaleString('en', { timeZone: 'America/Bogota', formatMatcher: 'best fit', hour12: true });
     console.log(`Fecha: ${colDate}`)
 
     const id = req.body.device
