@@ -126,7 +126,7 @@ deviceController.getOneDevice = async (req, res) => {
             msg: "hubo un error al obtener el dispositivo"
         })
 
-        console.log("[ADMIN] "+error)
+        console.log("[ADMIN] " + error)
 
     }
 
@@ -135,6 +135,24 @@ deviceController.getOneDevice = async (req, res) => {
 deviceController.giveIdDevice = async (req, res) => {
 
     //Metodo para otorgar un id al dispositivo
+
+}
+
+deviceController.deleteDevice = async (req, res) => {
+
+    console.log("[DEVICE] Eliminando dispositivo")
+
+    try {
+        await Device.findByIdAndDelete(req.body.id)
+        res.status(200).json({
+            msg: "Dispositivo eliminado"
+        })
+    } catch (error) {
+        res.status(500).json({
+            msg: "Hubo un error al eliminar el dispositivo"
+        })
+        console.log("[ADMIN] " + error)
+    }
 
 }
 

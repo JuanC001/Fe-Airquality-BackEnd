@@ -9,6 +9,7 @@ const router = Router();
 //Retorna todos los dispositivos (con datos)
 router.post('/getAllList', ValidarToken, device.getAllDevicesList);
 router.post('/getAll', ValidarToken, device.getAllDevices);
+router.post('/deleteDevice', ValidarToken, device.deleteDevice);
 router.post('/getOneDevice', ValidarToken, [
 
     check('id', 'El ID es obligatorio').not().isEmpty()
